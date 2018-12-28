@@ -1,0 +1,7 @@
+nomenclature:
+  name: groups
+  verboseName: Groups
+description: Interact with groups on-campus
+baseUrls:
+  http: groups/
+isApi: true
