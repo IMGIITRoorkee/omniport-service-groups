@@ -31,7 +31,7 @@ class Group(Model):
         blank=True,
         null=True,
         validators=[
-            YearRelationValidator('lte'),
+            YearRelationValidator('<='),
         ]
     )
 
