@@ -1,3 +1,5 @@
+from rest_framework import permissions
+
 from groups.models import Membership
 
 
@@ -20,3 +22,26 @@ def has_admin_rights(person, group):
         pass
 
     return False
+
+
+class HasAdminRights(permissions.BasePermission):
+    """
+    Allows access only to users who have edit rights
+    """
+
+    def has_object_permission(self, request, view, obj):
+        """
+        Check if the requesting person has permission to access a Membership
+        instance
+        :param request: the request being checked for permissions
+        :param view: the view to which the request was made
+        :param obj: the instance being accessed
+        :return: True if safe method or person has edit rights, False otherwise
+        """
+
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        person = request.person
+        group = obj.group
+        return has_admin_rights(person, group)
