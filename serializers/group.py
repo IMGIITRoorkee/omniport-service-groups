@@ -1,15 +1,15 @@
 from rest_framework import serializers
 
-from groups.models import Group
-from kernel.serializers.generics.contact_information import (
+from formula_one.serializers.generics.contact_information import (
     ContactInformationSerializer,
 )
-from kernel.serializers.generics.location_information import (
+from formula_one.serializers.generics.location_information import (
     LocationInformationSerializer,
 )
-from kernel.serializers.generics.social_information import (
+from formula_one.serializers.generics.social_information import (
     SocialInformationSerializer,
 )
+from groups.models import Group
 
 
 class GroupListSerializer(serializers.ModelSerializer):

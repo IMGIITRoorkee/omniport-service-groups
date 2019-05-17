@@ -1,7 +1,7 @@
-from groups.serializers.group_mixin import GroupSerializerMixin
-from kernel.serializers.generics.location_information import (
+from formula_one.serializers.generics.location_information import (
     LocationInformationSerializer,
 )
+from groups.serializers.group_mixin import GroupSerializerMixin
 
 
 class GroupLocationInformationSerializer(

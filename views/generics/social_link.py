@@ -1,12 +1,12 @@
 from rest_framework import viewsets, permissions, mixins
 from rest_framework.exceptions import PermissionDenied
 
+from formula_one.models import SocialLink
 from groups.models import Membership, Group
 from groups.permissions.edit import has_edit_rights
 from groups.serializers.generics.social_link import (
     GroupSocialLinkSerializer,
 )
-from kernel.models import SocialLink
 
 
 class SocialLinkViewSet(

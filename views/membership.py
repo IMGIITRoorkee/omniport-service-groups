@@ -1,10 +1,10 @@
 from rest_framework import viewsets, permissions
 from rest_framework.exceptions import PermissionDenied
 
+from formula_one.enums.active_status import ActiveStatus
 from groups.models import Membership, Group
 from groups.permissions.admin import HasAdminRights, has_admin_rights
 from groups.serializers.membership import MembershipSerializer
-from kernel.enums.active_status import ActiveStatus
 
 
 class MembershipViewSet(viewsets.ModelViewSet):

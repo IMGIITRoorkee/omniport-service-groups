@@ -1,8 +1,8 @@
 import swapper
 from django.db import models
 
-from kernel.mixins.period_mixin import PeriodMixin
-from kernel.models.root import Model
+from formula_one.mixins.period_mixin import PeriodMixin
+from formula_one.models.base import Model
 
 
 class Membership(PeriodMixin, Model):

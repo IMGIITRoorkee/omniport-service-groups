@@ -1,10 +1,10 @@
 from rest_framework import viewsets, permissions, mixins
 
+from formula_one.models import LocationInformation
 from groups.models import Membership, Group
 from groups.serializers.generics.location_information import (
     GroupLocationInformationSerializer
 )
-from kernel.models import LocationInformation
 
 
 class LocationInformationViewSet(

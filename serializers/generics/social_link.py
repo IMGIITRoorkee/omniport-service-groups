@@ -1,7 +1,7 @@
-from groups.serializers.group_mixin import GroupSerializerMixin
-from kernel.serializers.generics.social_information import (
+from formula_one.serializers.generics.social_information import (
     SocialLinkSerializer,
 )
+from groups.serializers.group_mixin import GroupSerializerMixin
 
 
 class GroupSocialLinkSerializer(

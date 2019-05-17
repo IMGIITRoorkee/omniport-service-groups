@@ -1,10 +1,10 @@
 from rest_framework import viewsets, permissions, mixins
 
+from formula_one.models import ContactInformation
 from groups.models import Membership, Group
 from groups.serializers.generics.contact_information import (
     GroupContactInformationSerializer,
 )
-from kernel.models import ContactInformation
 
 
 class ContactInformationViewSet(

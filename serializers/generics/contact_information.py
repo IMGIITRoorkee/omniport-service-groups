@@ -1,7 +1,7 @@
-from groups.serializers.group_mixin import GroupSerializerMixin
-from kernel.serializers.generics.contact_information import (
+from formula_one.serializers.generics.contact_information import (
     ContactInformationSerializer,
 )
+from groups.serializers.group_mixin import GroupSerializerMixin
 
 
 class GroupContactInformationSerializer(
