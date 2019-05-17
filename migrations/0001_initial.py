@@ -4,7 +4,9 @@ import django.db.models.deletion
 from django.conf import settings
 from django.db import migrations, models
 
-import kernel.utils.upload_to
+import formula_one.utils.upload_to
+import formula_one.validators.aspect_ratio
+import formula_one.validators.year_relation
 
 
 class Migration(migrations.Migration):
@@ -25,12 +27,12 @@ class Migration(migrations.Migration):
                 ('acronym', models.CharField(max_length=15, unique=True)),
                 ('name', models.CharField(max_length=127)),
                 ('slug', models.SlugField(max_length=127, unique=True)),
-                ('year_of_inception', models.IntegerField(blank=True, null=True)),
+                ('year_of_inception', models.IntegerField(blank=True, null=True, validators=[formula_one.validators.year_relation.YearRelationValidator('<=')])),
                 ('short_description', models.CharField(blank=True, max_length=127)),
                 ('about', models.TextField()),
                 ('mission', models.TextField()),
-                ('logo', models.ImageField(blank=True, max_length=255, null=True, upload_to=kernel.utils.upload_to.UploadTo('groups', 'logos'))),
-                ('cover_image', models.ImageField(blank=True, max_length=255, null=True, upload_to=kernel.utils.upload_to.UploadTo('groups', 'cover_images'))),
+                ('logo', models.ImageField(blank=True, max_length=255, null=True, upload_to=formula_one.utils.upload_to.UploadTo('groups', 'logos'), validators=[formula_one.validators.aspect_ratio.AspectRatioValidator(1)])),
+                ('cover_image', models.ImageField(blank=True, max_length=255, null=True, upload_to=formula_one.utils.upload_to.UploadTo('groups', 'cover_images'))),
             ],
             options={
                 'abstract': False,
@@ -58,7 +60,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('datetime_created', models.DateTimeField(auto_now_add=True)),
                 ('datetime_modified', models.DateTimeField(auto_now=True)),
-                ('image', models.ImageField(blank=True, max_length=255, null=True, upload_to=kernel.utils.upload_to.UploadTo('groups', 'post_images'))),
+                ('image', models.ImageField(blank=True, max_length=255, null=True, upload_to=formula_one.utils.upload_to.UploadTo('groups', 'post_images'))),
                 ('text', models.TextField()),
                 ('group', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='groups.Group')),
             ],
