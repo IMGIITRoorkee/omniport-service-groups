@@ -3,7 +3,9 @@ from rest_framework import serializers
 
 from groups.models import Membership
 from kernel.relations.person import PersonRelatedField
-from kernel.serializers.person import AvatarSerializer
+from omniport.utils import switcher
+
+AvatarSerializer = switcher.load_serializer('kernel', 'Person', 'Avatar')
 
 Person = swapper.load_model('kernel', 'Person')
 
