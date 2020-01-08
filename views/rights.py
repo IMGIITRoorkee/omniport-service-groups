@@ -1,7 +1,11 @@
+import logging
+
 from rest_framework import status, generics, permissions, response
 
 from groups.models import Group
 from groups.utils import rights
+
+logger = logging.getLogger('groups')
 
 
 class Rights(generics.GenericAPIView):
@@ -21,11 +25,11 @@ class Rights(generics.GenericAPIView):
         """
 
         which = request.query_params.get('which')
-        group = request.query_params.get('group')
+        group_slug = request.query_params.get('group')
 
         user = request.person
         try:
-            group = Group.objects.get(slug=group)
+            group = Group.objects.get(slug=group_slug)
 
             rights_function = getattr(rights, f'has_{which}_rights')
             has_rights = rights_function(user, group)
@@ -44,6 +48,11 @@ class Rights(generics.GenericAPIView):
                     ],
                 },
             }
+            logger.error(
+                f'The request to check {self.request.person}\'s rights '
+                f'for the group \'{group}\' was identified as a bad '
+                'request due to an attribute error'
+            )
             return response.Response(
                 data=response_data,
                 status=status.HTTP_400_BAD_REQUEST
@@ -56,6 +65,11 @@ class Rights(generics.GenericAPIView):
                     ],
                 },
             }
+            logger.error(
+                f'The request to check {self.request.person}\'s rights '
+                f'for the group with slug \'{group_slug}\' was identified '
+                'as a bad request as the group does not exist'
+            )
             return response.Response(
                 data=response_data,
                 status=status.HTTP_400_BAD_REQUEST

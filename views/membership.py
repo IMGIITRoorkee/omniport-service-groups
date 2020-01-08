@@ -1,3 +1,5 @@
+import logging
+
 from rest_framework import viewsets, permissions
 from rest_framework.exceptions import PermissionDenied
 
@@ -5,6 +7,8 @@ from formula_one.enums.active_status import ActiveStatus
 from groups.models import Membership, Group
 from groups.permissions.admin import HasAdminRights, has_admin_rights
 from groups.serializers.membership import MembershipSerializer
+
+logger = logging.getLogger('groups')
 
 
 class MembershipViewSet(viewsets.ModelViewSet):
@@ -49,12 +53,21 @@ class MembershipViewSet(viewsets.ModelViewSet):
         """
 
         person = request.person
-        group = request.data.get('group')
+        group_id = request.data.get('group')
         try:
-            group = Group.objects.get(pk=group)
+            group = Group.objects.get(pk=group_id)
             if not has_admin_rights(person, group):
+                logger.warning(
+                    f'{self.request.person} tried to add a member to the '
+                    f'group \'{group}\' but does not have the admin rights'
+                )
                 raise PermissionDenied
         except Group.DoesNotExist:
+            logger.error(
+                f'{self.request.person} tried to add a member to the '
+                f'group with primary key \'{group_id}\' but '
+                'the group does not exist'
+            )
             pass
 
         return super().create(request, *args, **kwargs)
