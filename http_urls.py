@@ -21,32 +21,32 @@ router = routers.SimpleRouter()
 router.register(
     'group',
     GroupViewSet,
-    base_name='group'
+    basename='group'
 )
 router.register(
     'post',
     PostViewSet,
-    base_name='post'
+    basename='post'
 )
 router.register(
     'membership',
     MembershipViewSet,
-    base_name='membership'
+    basename='membership'
 )
 router.register(
     'contact_information',
     ContactInformationViewSet,
-    base_name='contact_information'
+    basename='contact_information'
 )
 router.register(
     'location_information',
     LocationInformationViewSet,
-    base_name='location_information'
+    basename='location_information'
 )
 router.register(
     'social_link',
     SocialLinkViewSet,
-    base_name='social_information'
+    basename='social_information'
 )
 
 urlpatterns = [
