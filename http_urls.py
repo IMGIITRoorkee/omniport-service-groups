@@ -14,6 +14,7 @@ from groups.views.group import GroupViewSet
 from groups.views.membership import MembershipViewSet
 from groups.views.post import PostViewSet
 from groups.views.rights import Rights
+from groups.views.mass_membership import MassMembershipUpdate
 
 app_name = 'groups'
 
@@ -51,5 +52,6 @@ router.register(
 
 urlpatterns = [
     path('rights/', Rights.as_view(), name='rights'),
+    path('mass_membership/', MassMembershipUpdate.as_view(), name='mass_membership'),
     path('', include(router.urls)),
 ]
