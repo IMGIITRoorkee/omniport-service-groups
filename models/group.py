@@ -9,6 +9,8 @@ from formula_one.utils.upload_to import UploadTo
 from formula_one.validators.aspect_ratio import AspectRatioValidator
 from formula_one.validators.year_relation import YearRelationValidator
 
+from tinymce.models import HTMLField
+
 
 class Group(Model):
     """
@@ -39,8 +41,8 @@ class Group(Model):
         max_length=127,
         blank=True,
     )
-    about = models.TextField()
-    mission = models.TextField()
+    about = HTMLField()
+    mission = HTMLField()
 
     logo = models.ImageField(
         upload_to=UploadTo('groups', 'logos'),
