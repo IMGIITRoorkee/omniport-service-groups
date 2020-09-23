@@ -11,7 +11,6 @@ from formula_one.validators.aspect_ratio import AspectRatioValidator
 from formula_one.validators.year_relation import YearRelationValidator
 
 
-
 class Group(Model):
     """
     This model stores information about a group on campus
