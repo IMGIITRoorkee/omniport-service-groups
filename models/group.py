@@ -3,13 +3,13 @@ import datetime
 import swapper
 from django.contrib.contenttypes import fields as contenttypes_fields
 from django.db import models
+from tinymce.models import HTMLField
 
 from formula_one.models.base import Model
 from formula_one.utils.upload_to import UploadTo
 from formula_one.validators.aspect_ratio import AspectRatioValidator
 from formula_one.validators.year_relation import YearRelationValidator
 
-from tinymce.models import HTMLField
 
 
 class Group(Model):
