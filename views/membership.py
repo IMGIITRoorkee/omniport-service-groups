@@ -38,8 +38,12 @@ class MembershipViewSet(viewsets.ModelViewSet):
             queryset = Membership.objects_filter(ActiveStatus.IS_INACTIVE)
         else:
             queryset = Membership.objects.all()
-        queryset = queryset.order_by('-start_date', 'person__full_name')
-
+        
+        queryset = queryset.order_by(
+            '-person__student__current_year',
+            '-person__student__current_semester',
+            'person__full_name',
+        )
         return queryset
 
     def create(self, request, *args, **kwargs):
