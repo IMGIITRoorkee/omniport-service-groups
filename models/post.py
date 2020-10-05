@@ -36,6 +36,5 @@ class Post(Model):
         text = self.text[:80]        
         clean = re.compile('<.*?>')
         txt= re.sub(clean, '', text)
-
         return f'{group}: {txt}'
         
