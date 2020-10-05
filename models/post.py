@@ -5,6 +5,8 @@ from formula_one.utils.upload_to import UploadTo
 
 from tinymce.models import HTMLField
 
+import re
+
 class Post(Model):
     """
     This model holds information about a post made by a group
@@ -31,7 +33,9 @@ class Post(Model):
         """
 
         group = self.group
-        text = self.text[:80]
-        
-        return f'{group}: {text}'
+        text = self.text[:80]        
+        clean = re.compile('<.*?>')
+        txt= re.sub(clean, '', text)
+
+        return f'{group}: {txt}'
         
