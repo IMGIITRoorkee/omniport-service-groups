@@ -1,8 +1,10 @@
+import re
 from django.db import models
 
 from formula_one.models.base import Model
 from formula_one.utils.upload_to import UploadTo
 
+from tinymce.models import HTMLField
 
 class Post(Model):
     """
@@ -21,7 +23,7 @@ class Post(Model):
         null=True,
     )
 
-    text = models.TextField()
+    text = HTMLField()
 
     def __str__(self):
         """
@@ -30,5 +32,7 @@ class Post(Model):
         """
 
         group = self.group
-        text = self.text[:80]
+        html_inner_text = re.sub('<.*?>', '', self.text)
+        text = html_inner_text[:80]        
         return f'{group}: {text}'
+        

@@ -3,6 +3,7 @@ import datetime
 import swapper
 from django.contrib.contenttypes import fields as contenttypes_fields
 from django.db import models
+from tinymce.models import HTMLField
 
 from formula_one.models.base import Model
 from formula_one.utils.upload_to import UploadTo
@@ -39,8 +40,8 @@ class Group(Model):
         max_length=127,
         blank=True,
     )
-    about = models.TextField()
-    mission = models.TextField()
+    about = HTMLField()
+    mission = HTMLField()
 
     logo = models.ImageField(
         upload_to=UploadTo('groups', 'logos'),
