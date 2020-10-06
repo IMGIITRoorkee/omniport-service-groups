@@ -1,11 +1,11 @@
+import re
+
 from django.db import models
 
 from formula_one.models.base import Model
 from formula_one.utils.upload_to import UploadTo
 
 from tinymce.models import HTMLField
-
-import re
 
 class Post(Model):
     """
