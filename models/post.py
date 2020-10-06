@@ -33,7 +33,7 @@ class Post(Model):
         """
 
         group = self.group
-        txt = re.sub('<.*?>', '', self.text)
-        text = txt[:80]        
+        html_inner_text = re.sub('<.*?>', '', self.text)
+        text = html_inner_text[:80]        
         return f'{group}: {text}'
         
