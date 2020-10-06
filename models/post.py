@@ -1,5 +1,4 @@
 import re
-
 from django.db import models
 
 from formula_one.models.base import Model
