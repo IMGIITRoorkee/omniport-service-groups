@@ -40,9 +40,7 @@ class MembershipViewSet(viewsets.ModelViewSet):
             queryset = Membership.objects.all()
         
         queryset = queryset.order_by(
-            '-person__student__current_year',
-            '-person__student__current_semester',
-            'person__full_name',
+            'person__student__enrolment_number',
         )
         return queryset
 
