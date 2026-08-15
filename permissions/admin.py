@@ -1,6 +1,6 @@
 from rest_framework import permissions
 
-from groups.models import Membership
+from groups.models import Group, Membership
 
 
 def has_admin_rights(person, group):
@@ -28,6 +28,29 @@ class HasAdminRights(permissions.BasePermission):
     """
     Allows access only to users who have edit rights
     """
+
+    def has_permission(self, request, view):
+        """
+        Check if the requesting person has permission to act on the collection
+        of Membership instances
+        :param request: the request being checked for permissions
+        :param view: the view to which the request was made
+        :return: True if safe method, a detail route or the person has admin
+        rights over the group named in the request, False otherwise
+        """
+
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        if getattr(view, 'detail', False):
+            return True
+
+        try:
+            group = Group.objects.get(pk=request.data.get('group'))
+        except (Group.DoesNotExist, TypeError, ValueError):
+            return False
+
+        return has_admin_rights(request.person, group)
 
     def has_object_permission(self, request, view, obj):
         """
