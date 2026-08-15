@@ -1,12 +1,11 @@
 from rest_framework import status
 from rest_framework import response
 from rest_framework import viewsets, permissions
-from rest_framework.exceptions import PermissionDenied
 
 from formula_one.enums.active_status import ActiveStatus
 
-from groups.models import Membership, Group
-from groups.permissions.admin import HasAdminRights, has_admin_rights
+from groups.models import Membership
+from groups.permissions.admin import HasAdminRights
 from groups.serializers.membership import MembershipSerializer
 from groups.utils.membership_notifications import send_membership_notification
 
@@ -38,35 +37,33 @@ class MembershipViewSet(viewsets.ModelViewSet):
             queryset = Membership.objects_filter(ActiveStatus.IS_INACTIVE)
         else:
             queryset = Membership.objects.all()
-        
-        queryset = queryset.order_by(
+
+        queryset = queryset.select_related(
+            'group',
+        ).order_by(
             'person__student__enrolment_number',
         )
         return queryset
 
     def create(self, request, *args, **kwargs):
         """
-        Check if user has permission to create the new membership and defer to
-        the base implementation of the method
+        Create the new membership and notify the person it was created for
         :param request: the request being processed
         :param args: arguments
         :param kwargs: keyword arguments
         :return: the newly created instance
         """
 
-        person = request.person
-        group = request.data.get('group')
-        try:
-            group = Group.objects.get(pk=group)
-            if not has_admin_rights(person, group):
-                raise PermissionDenied
-        except Group.DoesNotExist:
-            pass
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-        send_membership_notification(group.name, 'add', request.data['person'])
+        membership = serializer.instance
+        send_membership_notification(
+            membership.group.name,
+            'add',
+            membership.person_id
+        )
         return response.Response(
             serializer.data,
             status=status.HTTP_201_CREATED,
@@ -75,49 +72,29 @@ class MembershipViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         """
-        Check if user has permission to delete the new membership and defer to
-        the base implementation of the method
+        Delete the membership and notify the person it belonged to
         :param request: the request being processed
         :param args: arguments
         :param kwargs: keyword arguments
         :return: deleted instance
         """
 
-        person = request.person
-        member = kwargs.get('pk')
-        try:
-            member = Membership.objects.get(pk=member)
-            if not has_admin_rights(person, member.group):
-                raise PermissionDenied
-        except Membership.DoesNotExist:
-            pass
         instance = self.get_object()
+        group_name = instance.group.name
+        person_id = instance.person_id
         self.perform_destroy(instance)
-        send_membership_notification(
-            member.group.name,
-            'remove',
-            member.person.id
-        )
+        send_membership_notification(group_name, 'remove', person_id)
         return response.Response(status=status.HTTP_204_NO_CONTENT)
 
     def update(self, request, *args, **kwargs):
         """
-        Check if user has permission to edit the new membership and defer to
-        the base implementation of the method
+        Update the membership and notify the person it belongs to
         :param request: the request being processed
         :param args: arguments
         :param kwargs: keyword arguments
         :return: response
         """
 
-        person = request.person
-        member = kwargs.get('pk')
-        try:
-            member = Membership.objects.get(pk=member)
-            if not has_admin_rights(person, member.group):
-                raise PermissionDenied
-        except Membership.DoesNotExist:
-            pass
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
         serializer = self.get_serializer(
@@ -130,8 +107,8 @@ class MembershipViewSet(viewsets.ModelViewSet):
         if getattr(instance, '_prefetched_objects_cache', None):
             instance._prefetched_objects_cache = {}
         send_membership_notification(
-            member.group.name,
+            instance.group.name,
             'edit',
-            member.person.id
+            instance.person_id
         )
         return response.Response(serializer.data)

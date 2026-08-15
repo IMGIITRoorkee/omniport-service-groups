@@ -49,7 +49,10 @@ class MembershipSerializer(serializers.ModelSerializer):
 
         request = self.context.get('request')
         viewer = getattr(request, 'person', None)
-        if not has_admin_rights(viewer, instance.group):
+        rights = self.context.setdefault('admin_rights', {})
+        if instance.group_id not in rights:
+            rights[instance.group_id] = has_admin_rights(viewer, instance.group)
+        if not rights[instance.group_id]:
             representation.pop('has_edit_rights', None)
             representation.pop('has_admin_rights', None)
 
