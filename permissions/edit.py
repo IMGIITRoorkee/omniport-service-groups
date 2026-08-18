@@ -1,6 +1,7 @@
 from rest_framework import permissions
 
 from groups.models import Membership
+from groups.permissions import has_rights_over_named_group
 
 
 def has_edit_rights(person, group):
@@ -49,6 +50,17 @@ class HasPostingRights(permissions.BasePermission):
     """
     Allows access only to users who have edit rights
     """
+
+    def has_permission(self, request, view):
+        """
+        Check if the requesting person has edit rights over the group named in
+        the request
+        :param request: the request being checked for permissions
+        :param view: the view to which the request was made
+        :return: True if the request is allowed to proceed, False otherwise
+        """
+
+        return has_rights_over_named_group(request, view, has_edit_rights)
 
     def has_object_permission(self, request, view, obj):
         """

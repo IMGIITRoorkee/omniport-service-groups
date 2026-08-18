@@ -56,12 +56,12 @@ class SocialLinkViewSet(
         """
 
         person = request.person
-        group = request.data.get('group')
         try:
-            group = Group.objects.get(pk=group)
-            if not has_edit_rights(person, group):
-                raise PermissionDenied
-        except Group.DoesNotExist:
-            pass
+            group = Group.objects.get(slug=request.data.get('slug'))
+        except (Group.DoesNotExist, TypeError, ValueError):
+            raise PermissionDenied
+
+        if not has_edit_rights(person, group):
+            raise PermissionDenied
 
         return super().create(request, *args, **kwargs)
